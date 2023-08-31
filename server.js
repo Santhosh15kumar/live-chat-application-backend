@@ -1,0 +1,35 @@
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+
+const app = express();
+app.use(express.json());
+const options = {useNewUrlParser: true, useUnifiedTopology: true}
+
+mongoose.connect(process.env.MONGODB_URL, options);
+
+mongoose.connection.on('connected', () => {
+    console.log('Mongoose connection is connected');
+});
+
+mongoose.connection.on('error', (error) => {
+    console.log('Mongoose connection has occured ' + error + 'error');
+});
+
+mongoose.connection.on('disconnected', () => {
+    console.log('Mongoose connection is disconnected');
+});
+
+process.on('SIGINT', () => {
+    mongoose.connection.close( () => {
+        console.log('Mongoose connection is disconnected due to apllication termination');
+    });
+});
+
+
+app.listen(3000, () => {
+    console.log("Server Running at http://localhost:3000/");
+});
+
+const useRoute = require('./routes/index');
+app.use(useRoute);
