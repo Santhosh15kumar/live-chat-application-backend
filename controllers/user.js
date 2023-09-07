@@ -17,5 +17,5 @@ exports.create = async (req,res) => {
             console.log('Error@createUser', error);
             return res.status(500).json({message: "Someting Went Wrong, please try again later", success: true});
         }
-    }
+    };
 

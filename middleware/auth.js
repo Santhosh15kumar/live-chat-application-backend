@@ -1,21 +1,19 @@
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
-const authenticateToken = (req,res, next) => {
-    const jwtToken = req.cookies
-    console.log('jwtToken', jwtToken);
-    if(jwtToken === undefined) {
-        return res.status(401).json({message: "Invalid jwtToken"});
-    }else {
-        jwt.verify(jwtToken.jwt, "MY_SECRET_TOKEN", async(error, payload) => {
-            if(error) {
-                return res.status(401).json({message: "Invalid jwtToken"});
-            }else{
-                next();
-            }
-        });
+function authenticateToken(req,res,next){
+    const token = req.headers["authorization"];
+
+    if(!token) {
+        return res.status(401).send('unauthorized: Token not povided');
     }
+    jwt.verify(token, 'MY_SECRET_TOKEN', async(error, user) => {
+        if(err) {
+            return res.status(403).send('Forbidden: Invalid Token');
+        }else {
+            next()
+        }
+    })
+}
 
-
-};
-
-module.exports = {authenticateToken};
+module.exports = authenticateToken;

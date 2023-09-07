@@ -8,14 +8,13 @@ const jwt = require('jsonwebtoken');
 class agentController {
     async register(req,res){
         try{
-        const {name, email, password, role, organizationId} = req.body;
+        const {name, email, password, role} = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
         const agent = new agentModel({
             name: name,
             email: email,
             password: hashedPassword,
-            role: role,
-            organizationId: organizationId
+            role: role
         }); 
 
         await agent.save();
@@ -34,7 +33,7 @@ class agentController {
             const isPasswordMatched = await bcrypt.compare(password, agent[0].password);
             if(isPasswordMatched){
                 const jwtToken = jwt.sign({ agent: agent._id}, 'MY_SECRET_TOKEN');
-                return res.status(200).cookie('jwt', jwtToken, {message: 360000}).json({ message: 'jwtToken created'});
+                return res.status(200).cookie('jwt', jwtToken, {message: 360000}).json({ message: 'jwtToken created', jwtToken});
             }
         }catch(error) {
             console.log("Error@loginAdmin", error);

@@ -20,10 +20,7 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
-    organizationId: {
-        type: String,
-        required: true
-    }
+    
 });
 
 const agent = mongoose.model('agent', schema);

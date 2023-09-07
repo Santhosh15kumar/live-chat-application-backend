@@ -2,10 +2,17 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const socketIo  = require('socket.io');
+const http = require('http');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
+
+const server = http.createServer(app);
+const io = socketIo(server);
 
 const options = {useNewUrlParser: true, useUnifiedTopology: true}
 
@@ -36,3 +43,5 @@ app.listen(3000, () => {
 
 const useRoute = require('./routes/index');
 app.use(useRoute);
+
+
